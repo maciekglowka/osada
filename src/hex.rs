@@ -33,3 +33,8 @@ impl SubAssign for Hex {
         *self = Self{q: self.q - other.q, r: self.r - other.r};
     }
 }
+
+pub const DIRECTIONS: [Hex; 6] = [
+    Hex { q: 1, r: 0 },  Hex { q: 1, r: -1 },  Hex { q: 0, r: -1 },
+    Hex { q: -1, r: 0 },  Hex { q: -1, r: 1 },  Hex { q: 0, r: 1 }
+];

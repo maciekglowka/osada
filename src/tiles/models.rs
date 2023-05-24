@@ -23,7 +23,7 @@ impl Structure for Empty {
 pub struct Forest;
 impl Structure for Forest {
     fn produce(&self) -> HashMap<Goods, u32> {
-        HashMap::from_iter([(Goods::Wood, 2)])
+        HashMap::from_iter([(Goods::Wood, 1)])
     }
     fn sprite(&self) -> usize { 1 }
 }

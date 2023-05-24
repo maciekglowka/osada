@@ -1,4 +1,4 @@
-#[derive(Hash, Eq, PartialEq)]
+#[derive(Clone, Copy, Hash, Eq, PartialEq)]
 pub enum Goods {
     Wood
 }

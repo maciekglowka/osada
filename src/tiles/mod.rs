@@ -27,7 +27,7 @@ pub struct Board {
 
 fn spawn_tiles(mut commands: Commands, mut board: ResMut<Board>) {
     insert_tile(&mut commands, board.as_mut(), 0, 0, None);
-    insert_tile(&mut commands, board.as_mut(), 1, 0, None);
+    insert_tile(&mut commands, board.as_mut(), 1, 0, Some(Box::new(models::Forest)));
     insert_tile(&mut commands, board.as_mut(), 1, 1, None);
     insert_tile(&mut commands, board.as_mut(), 2, 0, Some(Box::new(models::Forest)));
     insert_tile(&mut commands, board.as_mut(), 2, -1, None);
