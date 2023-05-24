@@ -5,6 +5,8 @@ use crate::states::MainState;
 mod assets;
 mod cursor;
 
+pub use cursor::Cursor;
+
 pub struct UiPlugin;
 
 impl Plugin for UiPlugin {

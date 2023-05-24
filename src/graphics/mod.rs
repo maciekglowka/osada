@@ -14,12 +14,13 @@ pub struct GraphicsPlugin;
 impl Plugin for GraphicsPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(assets::load_assets)
-            .add_system(tiles::spawn_tile_renderer);
+            .add_system(tiles::spawn_tile_renderer)
+            .add_system(tiles::update_tile);
     }
 }
 
 #[derive(Resource)]
 pub struct GraphicsAssets {
-    pub sprite_texture: Handle<TextureAtlas>,
+    pub tiles_texture: Handle<TextureAtlas>,
     pub hex_texture: Handle<TextureAtlas>,
 }

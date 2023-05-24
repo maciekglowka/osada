@@ -10,7 +10,7 @@ use super::UiAssets;
 pub struct Cursor;
 
 pub fn cursor_input(
-    keys: ResMut<Input<KeyCode>>,
+    keys: Res<Input<KeyCode>>,
     mut query: Query<(&mut Position, &mut Transform), With<Cursor>>
 ) {
     let mut dir = None;
