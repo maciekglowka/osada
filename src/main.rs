@@ -5,6 +5,7 @@ mod camera;
 mod globals;
 mod graphics;
 mod hex;
+mod manager;
 mod states;
 mod tiles;
 mod ui;
@@ -30,8 +31,10 @@ fn main() {
         .insert_resource(Msaa::Off)
         .insert_resource(ClearColor(Color::BLACK))
         .add_state::<states::MainState>()
+        .add_state::<states::GameState>()
         .add_plugin(assets::AssetsPlugin)
         .add_plugin(graphics::GraphicsPlugin)
+        .add_plugin(manager::ManagerPlugin)
         .add_plugin(tiles::TilesPlugin)
         .add_plugin(ui::UiPlugin)
         .add_startup_system(camera::setup)

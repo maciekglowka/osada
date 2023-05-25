@@ -1,9 +1,12 @@
 use bevy::prelude::*;
 
-use crate::states::MainState;
+use crate::tiles::TileEvent;
+use crate::states::{MainState, GameState};
 
 mod assets;
 mod cursor;
+mod elements;
+mod tiles;
 
 pub use cursor::Cursor;
 
@@ -15,13 +18,22 @@ impl Plugin for UiPlugin {
             .add_system(
                 cursor::spawn_cursor.in_schedule(OnEnter(MainState::Game))
             )
-            .add_system(
-                cursor::cursor_input.in_set(OnUpdate(MainState::Game))
+            .add_systems(
+                (cursor::cursor_input, tiles::open_build_menu)
+                .in_set(OnUpdate(GameState::Board))
+            )
+            .add_systems(
+                (
+                    elements::selection_menu::update_menu::<TileEvent>,
+                    elements::selection_menu::close_menu::<TileEvent>
+                )
+                .in_set(OnUpdate(GameState::BuildMenu))
             );
     }
 }
 
 #[derive(Resource)]
 pub struct UiAssets {
-    pub cursor_texture: Handle<TextureAtlas>
+    pub cursor_texture: Handle<TextureAtlas>,
+    pub font: Handle<Font>
 }

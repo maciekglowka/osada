@@ -15,9 +15,15 @@ pub struct TilesPlugin;
 impl Plugin for TilesPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Board>()
-            .add_system(spawn_tiles.in_schedule(OnEnter(MainState::Game)))
-            .add_system(systems::upgrade_tile.in_set(OnUpdate(MainState::Game)));
+            .add_event::<TileEvent>()
+            .add_system(spawn_tiles.in_schedule(OnEnter(MainState::Game)));
+            // .add_system(systems::upgrade_tile.in_set(OnUpdate(MainState::Game)));
     }
+}
+
+pub struct TileEvent(pub TileEventKind);
+pub enum TileEventKind {
+    Upgrade
 }
 
 #[derive(Default, Resource)]

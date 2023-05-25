@@ -2,7 +2,8 @@ use bevy::prelude::*;
 
 use super::UiAssets;
 
-const CURSOR_PATH: &str = "cursor.png";
+const CURSOR_PATH: &str = "ui/cursor.png";
+const FONT_PATH: &str = "ui/04B_03.ttf";
 
 pub fn load_assets(
     mut commands: Commands,
@@ -22,9 +23,13 @@ pub fn load_assets(
     );
     let cursor_handle = texture_atlasses.add(cursor_atlas);
 
+    let font = asset_server.load(FONT_PATH);
+    asset_list.0.push(font.clone_untyped());
+
     commands.insert_resource(
         UiAssets { 
-            cursor_texture: cursor_handle
+            cursor_texture: cursor_handle,
+            font
          }
     );
 }
