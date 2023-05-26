@@ -33,11 +33,9 @@ impl Plugin for UiPlugin {
                 (
                     elements::selection_menu::update_menu::<tiles::MenuType>,
                     elements::selection_menu::close_menu::<tiles::MenuType>,
+                    tiles::on_close_build_menu
                 )
                 .in_set(OnUpdate(GameUiState::BuildMenu))
-            )
-            .add_system(
-                tiles::on_close_build_menu.run_if(on_event::<events::MenuCloseEvent>())
             )
             .add_system(
                 clear::<elements::selection_menu::SelectionMenu<tiles::MenuType>>

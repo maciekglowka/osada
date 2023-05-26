@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 use crate::tiles::{
     Board,
+    check_goods,
     commands::TileUpgrade,
     Position,
     Structure,
@@ -30,13 +31,17 @@ pub fn open_build_menu(
     let Ok(cursor) = cursor_query.get_single() else { return };
     let Some(tile_entity) = board.tiles.get(&cursor.0) else { return };
     let Ok(tile) = tile_query.get(*tile_entity) else { return };
-    let Some(next) = tile.0.next(HashMap::new()) else { return };
 
-    let options = vec![
-        SelectionMenuOption::<MenuType>::new(
-            "Jeden".to_string(), next
-        )
-    ];
+    let goods = check_goods(cursor.0, &tile_query, board.as_ref());
+    let next = tile.0.next(&goods);
+    if next.len() == 0 { return };
+    
+    let options = next.into_iter()
+        .map(|a| SelectionMenuOption::<MenuType>::new(
+            a.name().to_string(), a
+        ))
+        .collect();
+
     draw_menu(
         &mut commands,
         options,
