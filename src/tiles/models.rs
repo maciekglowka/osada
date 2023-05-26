@@ -13,9 +13,9 @@ pub struct Empty;
 impl Structure for Empty {
     fn sprite(&self) -> usize { 0 }
     fn next(&self, goods: HashMap<Goods, u32>) -> Option<Box<dyn Structure>> {
-        if *goods.get(&Goods::Wood).unwrap_or(&0) < 2 {
-            return None
-        }
+        // if *goods.get(&Goods::Wood).unwrap_or(&0) < 2 {
+        //     return None
+        // }
         return Some(Box::new(WoodCutter))
     }
 }

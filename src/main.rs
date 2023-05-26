@@ -31,7 +31,6 @@ fn main() {
         .insert_resource(Msaa::Off)
         .insert_resource(ClearColor(Color::BLACK))
         .add_state::<states::MainState>()
-        .add_state::<states::GameState>()
         .add_plugin(assets::AssetsPlugin)
         .add_plugin(graphics::GraphicsPlugin)
         .add_plugin(manager::ManagerPlugin)

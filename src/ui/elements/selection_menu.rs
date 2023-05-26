@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use super::super::UiAssets;
+use super::super::events::MenuCloseEvent;
 
 const FONT_SIZE: f32 = 24.;
 
@@ -13,27 +14,31 @@ impl<T: Send + Sync + 'static> SelectionMenu<T> {
     pub fn new(options: Vec<SelectionMenuOption<T>>) -> Self {
         SelectionMenu { options, index: 0 }
     }
+    pub fn get_current(&mut self) -> &mut SelectionMenuOption<T> {
+        &mut self.options[self.index]
+    }
 }
 
 pub struct SelectionMenuOption<T: Send + Sync> {
     pub label: String,
-    pub value: T
+    pub value: Option<T>
 }
 impl<T: Send + Sync> SelectionMenuOption<T> {
     pub fn new(label: String, value: T) -> Self {
-        SelectionMenuOption { label, value }
+        SelectionMenuOption { label, value: Some(value) }
     }
 }
 
 pub fn close_menu<T: Send + Sync + 'static> (
-    mut commands: Commands,
-    query: Query<Entity, With<SelectionMenu<T>>>,
     keys: Res<Input<KeyCode>>,
+    mut ev_close: EventWriter<MenuCloseEvent>
 ) {
-    if !keys.just_pressed(KeyCode::Escape) { return };
-    for entity in query.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
+    if keys.just_pressed(KeyCode::Escape) { 
+        ev_close.send(MenuCloseEvent(false));
+    };
+    if keys.just_pressed(KeyCode::Space) {
+        ev_close.send(MenuCloseEvent(true));
+    };
 }
 
 pub fn update_menu<T: Send + Sync + 'static> (
