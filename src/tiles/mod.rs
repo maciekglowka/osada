@@ -17,9 +17,12 @@ pub struct TilesPlugin;
 impl Plugin for TilesPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Board>()
-            .add_system(spawn_tiles.in_schedule(OnEnter(MainState::Game)));
+            .add_event::<QueueUpdateEvent>()
+            .add_system(spawn_tiles.in_schedule(OnExit(MainState::LoadAssets)));
     }
 }
+
+pub struct QueueUpdateEvent;
 
 
 #[derive(Default, Resource)]

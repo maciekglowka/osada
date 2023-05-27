@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy::ecs::system::Command;
 
 use crate::hex::Hex;
+use super::QueueUpdateEvent;
 use super::components::{Position, Tile};
 use super::models::Structure;
 
@@ -25,6 +26,7 @@ impl Command for InsertTile {
             .id();
         let Some(mut board) = world.get_resource_mut::<super::Board>() else { return };
         board.tiles.insert(self.hex, entity);
+        world.send_event(QueueUpdateEvent);
     }
 }
 
@@ -38,5 +40,6 @@ impl Command for TileUpgrade {
         let Some(entity) = board.tiles.get(&self.hex) else { return };
         let Some(mut tile) = world.get_mut::<super::Tile>(*entity) else { return };
         tile.0 = self.structure;
+        world.send_event(QueueUpdateEvent);
     }
 }

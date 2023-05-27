@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::states::MainState;
+use crate::tiles::QueueUpdateEvent;
 
 mod assets;
 mod cursor;
@@ -10,6 +11,9 @@ mod tiles;
 
 pub use cursor::Cursor;
 
+const FONT_SIZE: f32 = 24.;
+const MENU_PADDING: Val = Val::Px(8.);
+
 pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
@@ -18,7 +22,7 @@ impl Plugin for UiPlugin {
         .add_event::<events::MenuCloseEvent>()
         .add_startup_system(assets::load_assets)
             .add_systems(
-                (cursor::spawn_cursor, game_start)
+                (cursor::spawn_cursor, game_start, tiles::update_queue_menu)
                 .in_schedule(OnEnter(MainState::Game))
             )
             .add_systems(
@@ -40,6 +44,9 @@ impl Plugin for UiPlugin {
             .add_system(
                 clear::<elements::selection_menu::SelectionMenu<tiles::MenuType>>
                     .in_schedule(OnExit(GameUiState::BuildMenu))
+            )
+            .add_system(
+                tiles::update_queue_menu.run_if(on_event::<QueueUpdateEvent>())
             );
     }
 }

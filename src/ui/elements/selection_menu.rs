@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
-use super::super::UiAssets;
+use super::super::{FONT_SIZE, MENU_PADDING, UiAssets};
 use super::super::events::MenuCloseEvent;
-
-const FONT_SIZE: f32 = 24.;
 
 #[derive(Component)]
 pub struct SelectionMenu<T: Send + Sync + 'static> {
@@ -75,7 +73,7 @@ pub fn draw_menu<T: Send + Sync + 'static> (
                     position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
                     margin: UiRect::all(Val::Auto),
-                    padding: UiRect::all(Val::Px(4.)),
+                    padding: UiRect::all(MENU_PADDING),
                     ..Default::default()
                 },
                 background_color: Color::DARK_GRAY.into(),

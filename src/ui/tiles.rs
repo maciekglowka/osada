@@ -9,7 +9,7 @@ use crate::tiles::{
     Tile
 };
 
-use super::GameUiState;
+use super::{FONT_SIZE, MENU_PADDING, UiAssets, GameUiState};
 use super::cursor::Cursor;
 use super::elements::selection_menu::{SelectionMenu, SelectionMenuOption, draw_menu};
 use super::events::MenuCloseEvent;
@@ -71,5 +71,58 @@ pub fn on_close_build_menu(
         let Some(structure) = option.value.take() else { continue };
         commands.add(TileUpgrade { hex: (*position).0, structure });
         break;
+    }
+}
+
+#[derive(Component)]
+pub struct QueueMenu;
+
+pub fn update_queue_menu(
+    mut commands: Commands,
+    assets: Res<UiAssets>,
+    query: Query<Entity, With<QueueMenu>>,
+    board: Res<Board>
+) {
+    let entity = match query.get_single() {
+        Ok(e) => {
+            commands.entity(e).despawn_descendants();
+            e
+        },
+        _ => {
+            commands.spawn((
+                    QueueMenu,
+                    NodeBundle {
+                        style: Style {
+                            position_type: PositionType::Absolute,
+                            flex_direction: FlexDirection::Column,
+                            margin: UiRect::new(
+                                Val::Auto, Val::Px(0.), Val::Px(0.), Val::Auto),
+                            padding: UiRect::all(MENU_PADDING),
+                            ..Default::default()
+                        },
+                        background_color: Color::DARK_GRAY.into(),
+                        ..Default::default()
+                    }
+                ))
+                .id()
+        }
+    };
+
+    for structure in board.queue.iter() {
+        let text = commands.spawn(
+                TextBundle {
+                    text: Text::from_section(
+                        structure.name(),
+                        TextStyle { 
+                            font: assets.font.clone(),
+                            font_size: FONT_SIZE,
+                            color: Color::WHITE
+                        }
+                    ),
+                    ..Default::default()
+                }
+            )
+            .id();
+        commands.entity(entity).add_child(text);
     }
 }
