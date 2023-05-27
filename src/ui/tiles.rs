@@ -1,10 +1,9 @@
 use bevy::prelude::*;
-use std::collections::HashMap;
 
 use crate::tiles::{
     Board,
     check_goods,
-    commands::TileUpgrade,
+    commands::{InsertTile, TileUpgrade},
     Position,
     Structure,
     Tile
@@ -17,7 +16,7 @@ use super::events::MenuCloseEvent;
 
 pub type MenuType = Box<dyn Structure>;
 
-pub fn open_build_menu(
+pub fn add_or_upgrade(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
     assets: Res<super::UiAssets>,
@@ -29,11 +28,17 @@ pub fn open_build_menu(
     if !keys.just_pressed(KeyCode::Space) { return };
 
     let Ok(cursor) = cursor_query.get_single() else { return };
-    let Some(tile_entity) = board.tiles.get(&cursor.0) else { return };
+    let Some(tile_entity) = board.tiles.get(&cursor.0) else { 
+        // no tile at this position
+        // try insert a new one from the board queue
+        commands.add(InsertTile { hex: cursor.0 });
+        return
+     };
+
     let Ok(tile) = tile_query.get(*tile_entity) else { return };
 
     let goods = check_goods(cursor.0, &tile_query, board.as_ref());
-    let next = tile.0.next(&goods);
+    let next = tile.0.get_next(&goods);
     if next.len() == 0 { return };
     
     let options = next.into_iter()

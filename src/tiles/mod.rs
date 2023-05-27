@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 use crate::hex::{DIRECTIONS, Hex};
 use crate::states::MainState;
@@ -24,48 +24,54 @@ impl Plugin for TilesPlugin {
 
 #[derive(Default, Resource)]
 pub struct Board {
-    pub tiles: HashMap<Hex, Entity>
+    pub tiles: HashMap<Hex, Entity>,
+    pub queue: VecDeque<Box<dyn Structure>>
 }
 
-fn spawn_tiles(mut commands: Commands, mut board: ResMut<Board>) {
-    insert_tile(&mut commands, board.as_mut(), 0, 0, None);
-    insert_tile(&mut commands, board.as_mut(), 1, 0, Some(Box::new(models::Forest)));
-    insert_tile(&mut commands, board.as_mut(), 1, 1, None);
-    insert_tile(&mut commands, board.as_mut(), 2, 0, Some(Box::new(models::Forest)));
-    insert_tile(&mut commands, board.as_mut(), 2, -1, None);
-    insert_tile(&mut commands, board.as_mut(), 2, 1, None);
-    insert_tile(&mut commands, board.as_mut(), 1, -1, None);
-    insert_tile(&mut commands, board.as_mut(), 1, -2, None);
-    insert_tile(&mut commands, board.as_mut(), -1, 0, None);
-    insert_tile(&mut commands, board.as_mut(), -1, -1, None);
+fn spawn_tiles(mut board: ResMut<Board>) {
+    // insert_tile(&mut commands, board.as_mut(), 0, 0, None);
+    // insert_tile(&mut commands, board.as_mut(), 1, 0, Some(Box::new(models::Forest)));
+    // insert_tile(&mut commands, board.as_mut(), 1, 1, None);
+    // insert_tile(&mut commands, board.as_mut(), 2, 0, Some(Box::new(models::Forest)));
+    // insert_tile(&mut commands, board.as_mut(), 2, -1, None);
+    // insert_tile(&mut commands, board.as_mut(), 2, 1, None);
+    // insert_tile(&mut commands, board.as_mut(), 1, -1, None);
+    // insert_tile(&mut commands, board.as_mut(), 1, -2, None);
+    // insert_tile(&mut commands, board.as_mut(), -1, 0, None);
+    // insert_tile(&mut commands, board.as_mut(), -1, -1, None);
+    board.queue.push_back(Box::new(models::Empty));
+    board.queue.push_back(Box::new(models::Forest));
+    board.queue.push_back(Box::new(models::Forest));
+    board.queue.push_back(Box::new(models::Empty));
+    board.queue.push_back(Box::new(models::Forest));
 }
 
-fn insert_tile(
-    commands: &mut Commands,
-    board: &mut Board,
-    q: i32,
-    r: i32,
-    model: Option<Box<dyn models::Structure>>
-) {
-    let structure = match model {
-        Some(m) => m,
-        None => Box::new(models::Empty) as Box<dyn models::Structure>
-    };
-    let hex = Hex::new(q, r);
-    let entity = commands.spawn((
-            Position(hex),
-            Tile(structure)
-        ))
-        .id();
-    board.tiles.insert(hex, entity);
-}
+// fn insert_tile(
+//     commands: &mut Commands,
+//     board: &mut Board,
+//     q: i32,
+//     r: i32,
+//     model: Option<Box<dyn models::Structure>>
+// ) {
+//     let structure = match model {
+//         Some(m) => m,
+//         None => Box::new(models::Empty) as Box<dyn models::Structure>
+//     };
+//     let hex = Hex::new(q, r);
+//     let entity = commands.spawn((
+//             Position(hex),
+//             Tile(structure)
+//         ))
+//         .id();
+//     board.tiles.insert(hex, entity);
+// }
 
 pub fn check_goods(
     hex: Hex,
     tile_query: &Query<&Tile>,
     board: &Board
 ) -> HashMap<enums::Goods, u32> {
-    // // gather goods from all surrounding tiles
+    // gather goods from all the surrounding tiles
     DIRECTIONS.iter()
         .flat_map(|d| board.tiles.get(&(hex + *d)))
         .flat_map(|e| tile_query.get(*e))

@@ -26,7 +26,7 @@ impl Plugin for UiPlugin {
                 .in_schedule(OnExit(MainState::Game))
             )
             .add_systems(
-                (cursor::cursor_input, tiles::open_build_menu)
+                (cursor::cursor_input, tiles::add_or_upgrade)
                 .in_set(OnUpdate(GameUiState::Cursor))
             )
             .add_systems(
