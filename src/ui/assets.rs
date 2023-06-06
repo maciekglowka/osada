@@ -15,7 +15,7 @@ pub fn load_assets(
     asset_list.0.push(cursor_texture.clone_untyped());
     let cursor_atlas = TextureAtlas::from_grid(
         cursor_texture,
-        Vec2::splat(32.),
+        Vec2::splat(8.),
         1,
         1,
         None,

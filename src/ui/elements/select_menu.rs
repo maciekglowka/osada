@@ -4,26 +4,26 @@ use super::super::{FONT_SIZE, MENU_PADDING, UiAssets};
 use super::super::events::MenuCloseEvent;
 
 #[derive(Component)]
-pub struct SelectionMenu<T: Send + Sync + 'static> {
-    pub options: Vec<SelectionMenuOption<T>>,
+pub struct SelectMenu<T: Send + Sync + 'static> {
+    pub options: Vec<SelectMenuOption<T>>,
     pub index: usize
 }
-impl<T: Send + Sync + 'static> SelectionMenu<T> {
-    pub fn new(options: Vec<SelectionMenuOption<T>>) -> Self {
-        SelectionMenu { options, index: 0 }
+impl<T: Send + Sync + 'static> SelectMenu<T> {
+    pub fn new(options: Vec<SelectMenuOption<T>>) -> Self {
+        SelectMenu { options, index: 0 }
     }
-    pub fn get_current(&mut self) -> &mut SelectionMenuOption<T> {
-        &mut self.options[self.index]
+    pub fn get_current(&self) -> &SelectMenuOption<T> {
+        &self.options[self.index]
     }
 }
 
-pub struct SelectionMenuOption<T: Send + Sync> {
+pub struct SelectMenuOption<T: Send + Sync> {
     pub label: String,
-    pub value: Option<T>
+    pub value: T
 }
-impl<T: Send + Sync> SelectionMenuOption<T> {
+impl<T: Send + Sync> SelectMenuOption<T> {
     pub fn new(label: String, value: T) -> Self {
-        SelectionMenuOption { label, value: Some(value) }
+        SelectMenuOption { label, value }
     }
 }
 
@@ -41,7 +41,7 @@ pub fn close_menu<T: Send + Sync + 'static> (
 
 pub fn update_menu<T: Send + Sync + 'static> (
     mut commands: Commands,
-    mut query: Query<(Entity, &mut SelectionMenu<T>)>,
+    mut query: Query<(Entity, &mut SelectMenu<T>)>,
     keys: Res<Input<KeyCode>>,
     assets: Res<UiAssets>
 ) {
@@ -63,10 +63,10 @@ pub fn update_menu<T: Send + Sync + 'static> (
 
 pub fn draw_menu<T: Send + Sync + 'static> (
     commands: &mut Commands,
-    options: Vec<SelectionMenuOption<T>>,
+    options: Vec<SelectMenuOption<T>>,
     assets: &UiAssets
 ) {
-    let menu = SelectionMenu::<T>::new(options);
+    let menu = SelectMenu::<T>::new(options);
     let entity = commands.spawn(
             NodeBundle {
                 style: Style {
@@ -88,7 +88,7 @@ pub fn draw_menu<T: Send + Sync + 'static> (
 fn draw_options<T: Send + Sync + 'static> (
     commands: &mut Commands,
     parent: Entity,
-    menu: &SelectionMenu<T>,
+    menu: &SelectMenu<T>,
     assets: &UiAssets
 ) {
     for (idx, option) in menu.options.iter().enumerate() {

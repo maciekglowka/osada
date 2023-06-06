@@ -1,0 +1,52 @@
+Mines:
+  sprite: 77
+  color: [255, 255, 255]
+  tiles_required: 
+    Mountains: 2
+  placed_on:
+    - Plains
+    - Mountains
+  states:
+    - goods_required: {}
+      goods_produced:
+        Ore: 1
+      credits: -2
+    - goods_required:
+        Food: 1
+      goods_produced:
+        Ore: 1
+      credits: 1
+Town:
+  sprite: 84
+  color: [255, 255, 255]
+  tiles_required: {}
+  placed_on:
+    - Plains
+  states:
+    - goods_required: {}
+      goods_produced:
+        Tools: 1
+      credits: -2
+    - goods_required:
+        Ore: 1
+      goods_produced:
+        Tools: 1
+      credits: 1
+Village:
+  sprite: 86
+  color: [255, 255, 255]
+  tiles_required: 
+    Plains: 1
+  placed_on:
+    - Plains
+  states:
+    - goods_required: {}
+      goods_produced:
+        Food: 1
+      credits: -2
+    - goods_required:
+        Tools: 1
+      goods_produced:
+        Food: 1
+      credits: 1
+

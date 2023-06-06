@@ -1,0 +1,9 @@
+Forest:
+  sprite: 177
+  color: [100, 160, 100]
+Mountains:
+  sprite: 178
+  color: [80, 80, 80]
+Plains:
+  sprite: 178
+  color: [160, 160, 80]
