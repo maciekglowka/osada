@@ -3,14 +3,13 @@ use bevy::time::common_conditions::on_timer;
 use core::time::Duration;
 
 use crate::board::SiteKind;
-use crate::player::NextTurnEvent;
 use crate::states::MainState;
 
 mod assets;
 mod build;
 mod cursor;
 mod elements;
-mod events;
+pub mod events;
 mod info;
 
 pub use cursor::Cursor;
@@ -23,6 +22,7 @@ pub struct UiPlugin;
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameUiState>()
+        .add_event::<events::CursorUpdateEvent>()
         .add_event::<events::MenuCloseEvent>()
         .add_event::<events::ReloadUiEvent>()
         .configure_sets(
@@ -39,7 +39,7 @@ impl Plugin for UiPlugin {
                 (clear::<cursor::Cursor>, game_end)
                 .in_schedule(OnExit(MainState::Game))
             )
-            .add_system(next_turn.run_if(on_event::<NextTurnEvent>()))
+            .add_system(resource_update::<crate::player::PlayerState>)
             .add_system(
                 cursor::cursor_input
                     .in_set(OnUpdate(GameUiState::Cursor))
@@ -65,6 +65,14 @@ impl Plugin for UiPlugin {
             )
             .add_system(
                 info::status_bar::draw.in_set(ReloadSet::Draw)
+            )
+            .add_system(
+                clear::<info::context_bar::ContextBar>
+                    .run_if(on_event::<events::CursorUpdateEvent>())
+                    .before(info::context_bar::draw)
+            )
+            .add_system(
+                info::context_bar::draw.run_if(on_event::<events::CursorUpdateEvent>())
             );
     }
 }
@@ -103,10 +111,13 @@ fn game_end(
     next_state.set(GameUiState::None);
 }
 
-fn next_turn(
+fn resource_update<T: Resource>(
+    res: Res<T>,
     mut ev_reload: EventWriter<events::ReloadUiEvent>
 ) {
-    ev_reload.send(events::ReloadUiEvent);
+    if res.is_changed() {
+        ev_reload.send(events::ReloadUiEvent);
+    }
 }
 
 fn clear<T: Component> (

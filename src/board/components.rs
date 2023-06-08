@@ -5,7 +5,7 @@ use super::enums::{SiteKind, TileKind};
 #[derive(Component, Debug)]
 pub struct Site{
     pub kind: SiteKind,
-    pub level: usize
+    pub tier: usize
 }
 
 #[derive(Component, Debug)]

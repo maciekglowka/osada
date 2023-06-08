@@ -47,7 +47,7 @@ pub struct SiteData {
     pub color: super::RGB,
     pub tiles_required: HashMap<TileKind, u32>,
     pub placed_on: Vec<TileKind>,
-    pub states: Vec<SiteState>
+    pub tiers: Vec<SiteState>
 }
 
 pub fn load_data(

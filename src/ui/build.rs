@@ -7,7 +7,7 @@ use crate::board::{
     Tile,
     func::{PossibleSitesParam, possible_sites}
 };
-use crate::player::commands::FundSite;
+use crate::manager::commands::ConstructSite;
 
 use super::{FONT_SIZE, MENU_PADDING, UiAssets, GameUiState};
 use super::cursor::Cursor;
@@ -51,7 +51,7 @@ pub fn on_close_menu(
         let Ok(menu) = menu_query.get_single() else { continue };
         let Ok(position) = cursor_query.get_single() else { continue };
         let option = menu.get_current();
-        commands.add(FundSite { v: (*position).0, kind: option.value });
+        commands.add(ConstructSite { v: (*position).0, kind: option.value });
         break;
     }
 }

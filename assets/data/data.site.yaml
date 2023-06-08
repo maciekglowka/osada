@@ -6,7 +6,7 @@ Mines:
   placed_on:
     - Plains
     - Mountains
-  states:
+  tiers:
     - goods_required: {}
       goods_produced:
         Ore: 1
@@ -22,7 +22,7 @@ Town:
   tiles_required: {}
   placed_on:
     - Plains
-  states:
+  tiers:
     - goods_required: {}
       goods_produced:
         Tools: 1
@@ -39,7 +39,7 @@ Village:
     Plains: 1
   placed_on:
     - Plains
-  states:
+  tiers:
     - goods_required: {}
       goods_produced:
         Food: 1

@@ -5,7 +5,7 @@ pub mod math;
 mod sites;
 mod tiles;
 
-pub const TILE_SIZE: f32 = 32.;
+pub const TILE_SIZE: f32 = 64.;
 pub const SITE_Z: f32 = 100.;
 pub const TILE_Z: f32 = 50.;
 pub const OVERLAY_Z: f32 = 200.;

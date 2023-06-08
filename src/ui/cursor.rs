@@ -7,7 +7,7 @@ use crate::board::{
 };
 use crate::graphics::{math::to_world_v3, TILE_SIZE, OVERLAY_Z};
 
-use super::UiAssets;
+use super::{UiAssets, events::CursorUpdateEvent};
 
 #[derive(Component)]
 pub struct Cursor;
@@ -16,17 +16,15 @@ pub fn cursor_input(
     // mut commands: Commands,
     keys: Res<Input<KeyCode>>,
     mut query: Query<(&mut Position, &mut Transform), With<Cursor>>,
+    mut ev_cursor: EventWriter<CursorUpdateEvent>
 ) {
     for (key, dir) in DIR_KEY_MAPPING {
         if !keys.pressed(key) { continue; }
         let Ok((mut position, mut transform)) = query.get_single_mut() else { return };
         position.0 += dir;
-        transform.translation = to_world_v3(position.0, OVERLAY_Z); 
+        transform.translation = to_world_v3(position.0, OVERLAY_Z);
+        ev_cursor.send(CursorUpdateEvent);
     }
-    // if keys.pressed(KeyCode::Space) {
-    //     let Ok((position, _)) = query.get_single() else { return };
-    //     commands.add(PlaceSite { kind: SiteKind::Village, v: position.0 });
-    // }
 }
 
 pub fn spawn_cursor(

@@ -6,6 +6,7 @@ use crate::states::MainState;
 pub mod commands;
 mod components;
 mod enums;
+mod events;
 pub mod func;
 mod systems;
 
@@ -16,7 +17,10 @@ pub struct BoardPlugin;
 impl Plugin for BoardPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Board>()
-            .add_system(systems::spawn_map.in_schedule(OnEnter(MainState::Game)));
+            .add_event::<events::SiteUpdateEvent>()
+            .add_system(systems::spawn_map.in_schedule(OnEnter(MainState::Game)))
+            .add_system(systems::update_sites
+                .run_if(on_event::<events::SiteUpdateEvent>()));
     }
 }
 

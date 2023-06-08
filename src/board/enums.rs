@@ -6,6 +6,15 @@ pub enum TileKind {
     Mountains,
     Plains
 }
+impl TileKind {
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Forest => "Forest",
+            Self::Mountains => "Mountains",
+            Self::Plains => "Plains",
+        }
+    }
+}
 
 
 #[derive(Clone, Copy, Debug, Deserialize, Hash, Eq, PartialEq)]
@@ -24,7 +33,8 @@ impl SiteKind {
     }
 }
 
-#[derive(Clone, Copy, Debug, Deserialize, Hash, Eq, PartialEq)]pub enum Goods {
+#[derive(Clone, Copy, Debug, Deserialize, Hash, Eq, PartialEq)]
+pub enum Goods {
     Food,
     Ore,
     Tools
